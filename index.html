@@ -1,11 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <title>Register & Login</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+    }
+    .box {
+      background: white;
+      padding: 20px;
+      width: 300px;
+      margin-top: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #aaa;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .toggle {
+      margin-top: 10px;
+      color: blue;
+      cursor: pointer;
+      text-align: center;
+    }
+    .error {
+      color: red;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
-    <h1><blockquote>HELLLOOOOO</blockquote></h1>
+
+  <div class="box" id="registerBox">
+    <h2>Register</h2>
+    <input type="text" id="regName" placeholder="Name">
+    <input type="email" id="regEmail" placeholder="Email">
+    <input type="password" id="regPassword" placeholder="Password">
+    <div class="error" id="regError"></div>
+    <button onclick="register()">Register</button>
+    <div class="toggle" onclick="showLogin()">Already have an account? Login</div>
+  </div>
+
+  <div class="box" id="loginBox" style="display:none;">
+    <h2>Login</h2>
+    <input type="email" id="logEmail" placeholder="Email">
+    <input type="password" id="logPassword" placeholder="Password">
+    <div class="error" id="logError"></div>
+    <button onclick="login()">Login</button>
+    <div class="toggle" onclick="showRegister()">Don't have an account? Register</div>
+  </div>
+
+  <script>
+    function showLogin() {
+      document.getElementById("registerBox").style.display = "none";
+      document.getElementById("loginBox").style.display = "block";
+    }
+
+    function showRegister() {
+      document.getElementById("registerBox").style.display = "block";
+      document.getElementById("loginBox").style.display = "none";
+    }
+
+    function register() {
+      let name = document.getElementById("regName").value.trim();
+      let email = document.getElementById("regEmail").value.trim();
+      let password = document.getElementById("regPassword").value;
+
+      if (!name || !email || !password) {
+        document.getElementById("regError").innerText = "All fields are required.";
+        return;
+      }
+
+      if (!email.includes("@") || !email.includes(".")) {
+        document.getElementById("regError").innerText = "Enter a valid email.";
+        return;
+      }
+
+      if (password.length < 6) {
+        document.getElementById("regError").innerText = "Password must be at least 6 characters.";
+        return;
+      }
+
+      let user = { name, email, password };
+      localStorage.setItem("user", JSON.stringify(user));
+      alert("Registered successfully!");
+      showLogin();
+    }
+
+    function login() {
+      let email = document.getElementById("logEmail").value.trim();
+      let password = document.getElementById("logPassword").value;
+
+      let storedUser = JSON.parse(localStorage.getItem("user"));
+
+      if (!storedUser || storedUser.email !== email || storedUser.password !== password) {
+        document.getElementById("logError").innerText = "Invalid email or password.";
+      } else {
+        alert("Login successful! Welcome " + storedUser.name);
+        document.getElementById("logError").innerText = "";
+      }
+    }
+  </script>
+
 </body>
 </html>
